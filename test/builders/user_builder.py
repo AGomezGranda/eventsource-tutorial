@@ -1,8 +1,8 @@
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 from uuid import uuid4
 from typing import Optional
 
-from types import User
+from src.types import User
 
 class UserBuilder:
     """Class for creating User objects for testing"""
@@ -13,7 +13,7 @@ class UserBuilder:
         self._address: Optional[str] = None
         self._phone: Optional[str] = None
         self._created_at: datetime = datetime.now(timezone.utc)
-        self._updated_at: Optional[datetime] = None
+        self._updated_at: datetime = datetime.now(timezone.utc)
 
     def with_id(self, id: str) -> 'UserBuilder':
         self._id = id
