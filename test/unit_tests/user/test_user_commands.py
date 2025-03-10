@@ -19,10 +19,9 @@ class TestUserCommands:
     def test_create_user_command(self, event_store: EventStore) -> None:
         """Test create_user command function"""
         user = self.basic_user
-        created_id = create_user(event_store, user)
+        created_id, stream = create_user(event_store, user)
         assert created_id == self.user_id
 
-        stream = event_store.stream(category=CATEGORY, stream=self.user_id)
         events = stream.read()
 
         assert len(events) == 1
@@ -31,15 +30,12 @@ class TestUserCommands:
         assert get_event_payload(events[0])["username"] == "John Doe"
         assert get_event_payload(events[0])["email"] == "john.doe@example.com"
 
-    def test_update_user_command(self, event_store: EventStore) -> None:
+    def test_update_user_email_command(self, event_store: EventStore) -> None:
         """Test update_user_email function"""
         user = self.basic_user
         create_user(event_store, user)
-
         email = "john.doe123@example.com"
-        update_user_email(store=event_store, user_id=self.user_id, email=email)
-
-        stream = event_store.stream(category=CATEGORY, stream=self.user_id)
+        stream = update_user_email(store=event_store, user_id=self.user_id, email=email)
         events = stream.read()
 
         assert len(events) == 2
@@ -51,11 +47,10 @@ class TestUserCommands:
         """Test add_user_address function"""
         user = self.basic_user
         create_user(event_store, user)
-
         address = "123 Main St"
-        add_user_address(store=event_store, user_id=self.user_id, address=address)
-
-        stream = event_store.stream(category=CATEGORY, stream=self.user_id)
+        stream = add_user_address(
+            store=event_store, user_id=self.user_id, address=address
+        )
         events = stream.read()
 
         assert len(events) == 2

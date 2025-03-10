@@ -1,3 +1,0 @@
-def create_user_projector():
-    """Creates a new user projector."""
-    return ...

@@ -18,7 +18,7 @@ def create_user(store: EventStore, user: User):
             )
         ]
     )
-    return user_id
+    return user_id, stream
 
 
 def update_user_email(store: EventStore, user_id: str, email: str):
@@ -32,6 +32,7 @@ def update_user_email(store: EventStore, user_id: str, email: str):
             )
         ]
     )
+    return stream
 
 
 def add_user_address(store: EventStore, user_id: str, address: str):
@@ -45,3 +46,4 @@ def add_user_address(store: EventStore, user_id: str, address: str):
             )
         ]
     )
+    return stream
