@@ -1,15 +1,14 @@
-import uuid
 from logicblocks.event.store import EventStore
 
 from src.commands import create_user, update_user_email, add_user_address
-from test.builders.user_builder import build_user
+from test.builders.user_builder import build_user, build_user_address, build_user_id
 from src.utils import get_event_payload
 
 CATEGORY = "users"
 
 
 class TestUserCommands:
-    user_id = str(uuid.uuid4())
+    user_id = build_user_id()
     basic_user = build_user(
         id=user_id,
         username="John Doe",
@@ -19,9 +18,10 @@ class TestUserCommands:
     def test_create_user_command(self, event_store: EventStore) -> None:
         """Test create_user command function"""
         user = self.basic_user
-        created_id, stream = create_user(event_store, user)
+        created_id = create_user(event_store, user)
         assert created_id == self.user_id
 
+        stream = event_store.stream(category=CATEGORY, stream=created_id)
         events = stream.read()
 
         assert len(events) == 1
@@ -35,7 +35,9 @@ class TestUserCommands:
         user = self.basic_user
         create_user(event_store, user)
         email = "john.doe123@example.com"
-        stream = update_user_email(store=event_store, user_id=self.user_id, email=email)
+        update_user_email(store=event_store, user_id=self.user_id, email=email)
+
+        stream = event_store.stream(category=CATEGORY, stream=self.user_id)
         events = stream.read()
 
         assert len(events) == 2
@@ -47,10 +49,10 @@ class TestUserCommands:
         """Test add_user_address function"""
         user = self.basic_user
         create_user(event_store, user)
-        address = "123 Main St"
-        stream = add_user_address(
-            store=event_store, user_id=self.user_id, address=address
-        )
+        address = build_user_address()
+        add_user_address(store=event_store, user_id=self.user_id, address=address)
+
+        stream = event_store.stream(category=CATEGORY, stream=self.user_id)
         events = stream.read()
 
         assert len(events) == 2

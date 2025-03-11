@@ -1,7 +1,7 @@
 from logicblocks.event.store import EventStore
 from logicblocks.event.types import NewEvent
 
-from src.types import User
+from src.model import User
 
 CATEGORY = "users"
 
@@ -18,7 +18,7 @@ def create_user(store: EventStore, user: User):
             )
         ]
     )
-    return user_id, stream
+    return user_id
 
 
 def update_user_email(store: EventStore, user_id: str, email: str):
@@ -32,11 +32,10 @@ def update_user_email(store: EventStore, user_id: str, email: str):
             )
         ]
     )
-    return stream
 
 
 def add_user_address(store: EventStore, user_id: str, address: str):
-    """Adds a new address for a user."""
+    """Adds address of a user."""
     stream = store.stream(category=CATEGORY, stream=user_id)
     stream.publish(
         events=[
@@ -46,4 +45,3 @@ def add_user_address(store: EventStore, user_id: str, address: str):
             )
         ]
     )
-    return stream
