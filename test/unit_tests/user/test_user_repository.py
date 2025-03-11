@@ -8,7 +8,7 @@ class TestUserRepository:
         user_id = build_user_id()
         user = build_user(id=user_id)
         user_repository.save_user(user)
-        user_stored = user_repository.get(user_id)
+        user_stored = user_repository.get_user(user_id)
 
         assert user_stored is not None
         assert user_stored.id == user.id
@@ -23,14 +23,14 @@ class TestUserRepository:
         for user in users:
             user_repository.save_user(user)
 
-        users_stored = user_repository.get_all()
+        users_stored = user_repository.get_all_events()
         assert len(users_stored) == 3
         assert all(user in users_stored for user in users)
 
     def test_get_non_existing_user(self, user_repository: UserRepository):
         """Test retrieving a non-existing user from the repository"""
         user_id = build_user_id()
-        user_stored = user_repository.get(user_id)
+        user_stored = user_repository.get_user(user_id)
 
         assert user_stored is None
 
@@ -46,7 +46,7 @@ class TestUserRepository:
         address = build_user_address()
         user_repository.add_address(user=user, address=address)
 
-        user = user_repository.get(user_id)
+        user = user_repository.get_user(user_id)
         assert user is not None
         assert user.id == user_id
         assert user.username == user.username

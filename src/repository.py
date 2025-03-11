@@ -21,7 +21,7 @@ class UserRepository:
     def add_address(self, user: User, address: str):
         add_user_address(self.store, user_id=user.id, address=address)
 
-    def get(self, user_id: str) -> Optional[User]:
+    def get_user(self, user_id: str) -> Optional[User]:
         stream = self.store.stream(category="users", stream=user_id)
         events = stream.read()
         if not events:
@@ -29,13 +29,13 @@ class UserRepository:
         user_dict = self.projector.project({}, events)
         return User.deserialise(user_dict.state)
 
-    def get_all(self) -> List[User]:
+    def get_all_events(self) -> List[User]:
         category = self.store.category(category="users")
         streams = category.read()
 
         users = []
         for stream in streams:
-            user = self.get(stream.payload["id"])
+            user = self.get_user(stream.payload["id"])
             if user:
                 users.append(user)
         return users

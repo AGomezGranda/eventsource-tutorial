@@ -23,10 +23,10 @@ def main():
     new_email_a = "new_email_a@example.com"
     user_repository.update_email(user_a, new_email_a)
 
-    updated_user_a = user_repository.get(new_user_a_id)
+    updated_user_a = user_repository.get_user(new_user_a_id)
     print(f"User updated: {updated_user_a}")
 
-    # Create new user B, and update email and address
+    # Create new user B, in a separate stream, update email and add address
     user_b_id = build_user_id()
     user_b = build_user(id=user_b_id)
     new_user_b_id = user_repository.save_user(user_b)
@@ -38,11 +38,11 @@ def main():
     address_b = build_user_address()
     user_repository.add_address(user_b, address_b)
 
-    updated_user_b = user_repository.get(new_user_b_id)
+    updated_user_b = user_repository.get_user(new_user_b_id)
     print(f"User updated: {updated_user_b}")
 
-    # Get all users
-    all_users = user_repository.get_all()
+    # Get all events/streams
+    all_users = user_repository.get_all_events()
     for user in all_users:
         print(f"User: {user.username}: {user.email}")
 

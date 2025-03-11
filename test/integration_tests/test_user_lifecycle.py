@@ -23,7 +23,7 @@ class TestIntegration:
 
         repository.save_user(user)
 
-        user_repo = repository.get(user_id=user_id)
+        user_repo = repository.get_user(user_id=user_id)
         assert user_repo is not None
 
         new_email = "new_email@example.com"
@@ -32,7 +32,7 @@ class TestIntegration:
         address = build_user_address()
         repository.add_address(user=user, address=address)
 
-        updated_user = repository.get(user_id=user_id)
+        updated_user = repository.get_user(user_id=user_id)
         assert updated_user is not None
         assert updated_user.id == user_id
         assert updated_user.username == user.username
